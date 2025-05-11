@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Heart, Gift, Cake, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, Gift, Cake, ChevronLeft, ChevronRight, Flower } from 'lucide-react';
 
 export default function App() {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [showMessage, setShowMessage] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showRoses, setShowRoses] = useState(false);
 
   const photos = [
     "/images/photo1.jpg",
@@ -48,6 +49,11 @@ export default function App() {
     setTimeout(() => setShowHearts(false), 2000);
   };
   
+  const triggerRoses = () => {
+    setShowRoses(true);
+    setTimeout(() => setShowRoses(false), 2500);
+  };
+  
   const toggleMode = () => {
     setBirthdayMode(!birthdayMode);
     setShowConfetti(true);
@@ -65,9 +71,15 @@ export default function App() {
       {/* Heart overlay */}
       {showHearts && <HeartBurst />}
       
+      {/* Rose overlay */}
+      {showRoses && <RoseBurst />}
+      
       {/* Header */}
       <header className={`w-full ${birthdayMode ? 'bg-pink-500' : 'bg-blue-500'} text-white py-4 px-6 shadow-md flex items-center justify-center transition-colors duration-700`}>
         <div className="flex items-center gap-3">
+          <div className="text-rose-200 cursor-pointer hover:scale-125 transition-transform" onClick={triggerRoses}>
+            🌹
+          </div>
           <Heart 
             className="animate-pulse text-red-200 cursor-pointer hover:scale-125 transition-transform" 
             size={32} 
@@ -79,16 +91,33 @@ export default function App() {
             size={32}
             onClick={triggerHearts}
           />
+          <div className="text-rose-200 cursor-pointer hover:scale-125 transition-transform" onClick={triggerRoses}>
+            🌹
+          </div>
         </div>
       </header>
       
       {/* Main content */}
       <main className="max-w-3xl w-full mx-auto p-6 flex flex-col items-center gap-8 mt-4">
-        {/* Title with nurse theme */}
+        {/* Title with nurse theme and roses */}
         <div className="relative">
-          <h2 className="text-4xl font-bold text-center text-pink-600 mb-2">
-            Happy 21<sup>st</sup> Birthday!
-          </h2>
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <div 
+              className="text-3xl cursor-pointer hover:scale-125 transition-transform" 
+              onClick={triggerRoses}
+            >
+              🌹
+            </div>
+            <h2 className="text-4xl font-bold text-center text-pink-600">
+              Happy 21<sup>st</sup> Birthday!
+            </h2>
+            <div 
+              className="text-3xl cursor-pointer hover:scale-125 transition-transform" 
+              onClick={triggerRoses}
+            >
+              🌹
+            </div>
+          </div>
           <div className="flex justify-center items-center gap-4">
             <div className="h-1 w-16 bg-blue-500 rounded-full"></div>
             <div className="text-blue-600 text-4xl">💉</div>
@@ -104,10 +133,20 @@ export default function App() {
           Switch to {birthdayMode ? 'Nurse' : 'Birthday'} Theme
         </button>
 
-        {/* Photo album with polaroid style */}
+        {/* Rose border photo album with polaroid style */}
         <div className={`relative w-full max-w-md bg-white rounded-lg shadow-xl p-6 border-4 ${birthdayMode ? 'border-pink-300' : 'border-blue-300'} transition-colors duration-700`}>
+          {/* Rose corners */}
+          <div className="absolute -top-3 -left-3 text-2xl transform -rotate-45 cursor-pointer hover:scale-125 transition-transform" onClick={triggerRoses}>
+            🌹
+          </div>
           <div className={`absolute -top-3 -right-3 ${birthdayMode ? 'bg-red-500' : 'bg-blue-500'} text-white rounded-full p-2 shadow-md z-10 transition-colors duration-700`}>
             <Cake size={24} onClick={triggerHearts} className="cursor-pointer hover:rotate-12 transition-transform" />
+          </div>
+          <div className="absolute -bottom-3 -left-3 text-2xl transform rotate-45 cursor-pointer hover:scale-125 transition-transform" onClick={triggerRoses}>
+            🌹
+          </div>
+          <div className="absolute -bottom-3 -right-3 text-2xl transform rotate-135 cursor-pointer hover:scale-125 transition-transform" onClick={triggerRoses}>
+            🌹
           </div>
           
           <h3 className={`text-2xl font-semibold text-center mb-4 ${birthdayMode ? 'text-pink-700' : 'text-blue-700'} transition-colors duration-700`}>Our Photos</h3>
@@ -174,8 +213,19 @@ export default function App() {
             <p className={`text-gray-600 font-medium`}>
               {activePhotoIndex + 1} / {photos.length}
             </p>
-            <div className="flex items-center gap-1">
-              <span className="text-red-500">❤️</span>
+            <div className="flex items-center gap-2">
+              <span 
+                className="text-red-500 cursor-pointer hover:scale-125 transition-transform" 
+                onClick={triggerHearts}
+              >
+                ❤️
+              </span>
+              <span 
+                className="text-rose-500 cursor-pointer hover:scale-125 transition-transform" 
+                onClick={triggerRoses}
+              >
+                🌹
+              </span>
               <span className={`font-bold ${birthdayMode ? 'text-pink-600' : 'text-blue-600'}`}>{loveCount}</span>
             </div>
           </div>
@@ -190,9 +240,12 @@ export default function App() {
           <span className="font-bold">{showMessage ? "Hide Message" : "View Birthday Message"}</span>
         </button>
         
-        {/* Birthday message */}
+        {/* Birthday message with rose decoration */}
         {showMessage && (
-          <div className={`w-full max-w-md bg-white rounded-lg shadow-lg p-6 border-2 ${birthdayMode ? 'border-pink-300' : 'border-blue-300'} animate-fadeIn transition-colors duration-700`}>
+          <div className={`w-full max-w-md bg-white rounded-lg shadow-lg p-6 border-2 ${birthdayMode ? 'border-pink-300' : 'border-blue-300'} animate-fadeIn transition-colors duration-700 relative`}>
+            {/* Rose decoration around message */}
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 text-2xl">🌹</div>
+            
             <div className="flex flex-col gap-4">
               <div className="flex justify-between">
                 <div className="text-3xl animate-bounce">💌</div>
@@ -207,19 +260,27 @@ export default function App() {
               
               <div className="flex justify-between">
                 <div className="text-3xl cursor-pointer hover:scale-125 transition-transform" onClick={triggerHearts}>❤️</div>
+                <div className="text-3xl cursor-pointer hover:scale-125 transition-transform" onClick={triggerRoses}>🌹</div>
                 <div className="text-3xl cursor-pointer hover:scale-125 transition-transform" onClick={() => {setShowConfetti(true); setTimeout(() => setShowConfetti(false), 2000);}}>🎉</div>
               </div>
             </div>
             
-            {/* Interactive elements */}
+            {/* Rose-themed interactive elements */}
             <div className="mt-4 flex flex-col items-center">
               <p className="text-gray-500 text-sm mb-2">Click to see some birthday magic!</p>
               <div className="flex gap-3 justify-center mt-2">
-                {["🎂", "🎁", "🎈", "🌟", "💫"].map((emoji, idx) => (
+                {["🎂", "🎁", "🌹", "🌟", "💫"].map((emoji, idx) => (
                   <button 
                     key={idx}
                     className="text-2xl bg-white rounded-full p-2 shadow hover:shadow-lg transition-all hover:scale-110 focus:outline-none"
-                    onClick={() => {setShowConfetti(true); setTimeout(() => setShowConfetti(false), 2000);}}
+                    onClick={() => {
+                      if (emoji === "🌹") {
+                        triggerRoses();
+                      } else {
+                        setShowConfetti(true); 
+                        setTimeout(() => setShowConfetti(false), 2000);
+                      }
+                    }}
                   >
                     {emoji}
                   </button>
@@ -228,6 +289,49 @@ export default function App() {
             </div>
           </div>
         )}
+        
+        {/* New Rose Garden Section */}
+        <div className={`w-full max-w-md ${birthdayMode ? 'bg-rose-50 border-rose-200' : 'bg-blue-50 border-blue-200'} rounded-lg shadow-md p-6 border-2 transition-colors duration-700`}>
+          <h3 className={`text-xl font-bold ${birthdayMode ? 'text-rose-700' : 'text-blue-700'} mb-3 flex items-center gap-2 justify-center transition-colors duration-700`}>
+            <div className="text-2xl">🌹</div>
+            <span>Rose Garden of Wishes</span>
+            <div className="text-2xl">🌹</div>
+          </h3>
+          
+          {/* Rose varieties */}
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { color: "bg-rose-300", name: "Pink Rose", wish: "Love" },
+              { color: "bg-red-400", name: "Red Rose", wish: "Passion" },
+              { color: "bg-rose-200", name: "Soft Rose", wish: "Grace" },
+              { color: "bg-red-600", name: "Deep Red", wish: "Affection" },
+              { color: "bg-rose-100", name: "Blush", wish: "Joy" },
+              { color: "bg-amber-300", name: "Yellow Rose", wish: "Friendship" }
+            ].map((rose, idx) => (
+              <div 
+                key={idx}
+                className={`${rose.color} rounded-lg p-3 flex flex-col items-center shadow-sm hover:shadow-md transition-all cursor-pointer transform hover:scale-105`}
+                onClick={triggerRoses}
+              >
+                <div className="text-3xl mb-1">🌹</div>
+                <p className="text-white font-medium text-center text-sm">{rose.name}</p>
+                <p className="text-white text-xs text-center mt-1">"{rose.wish}"</p>
+              </div>
+            ))}
+          </div>
+          
+          <p className="text-center mt-4 text-gray-600 italic">
+            Click on a rose to send your wish! 🌹✨
+          </p>
+          
+          <button 
+            className={`w-full mt-4 py-2 rounded-full ${birthdayMode ? 'bg-rose-500 hover:bg-rose-600' : 'bg-blue-500 hover:bg-blue-600'} text-white font-medium transition-colors duration-700 flex items-center justify-center gap-2`}
+            onClick={triggerRoses}
+          >
+            <span>Bloom All Roses</span>
+            <span className="text-xl">🌹</span>
+          </button>
+        </div>
         
         {/* Nurse theme elements */}
         <div className={`w-full max-w-md ${birthdayMode ? 'bg-blue-50 border-blue-200' : 'bg-pink-50 border-pink-200'} rounded-lg shadow-md p-6 border-2 transition-colors duration-700`}>
@@ -243,6 +347,7 @@ export default function App() {
               { icon: "🏥", text: "Dedicated" },
               { icon: "❤️", text: "Compassionate" },
               { icon: "📚", text: "Studious" },
+              { icon: "🌹", text: "Rosey" },
               { icon: "🔬", text: "Detail-oriented" }
             ].map((badge, idx) => (
               <NurseBadge 
@@ -250,7 +355,7 @@ export default function App() {
                 icon={badge.icon} 
                 text={badge.text} 
                 birthdayMode={birthdayMode}
-                onClick={triggerHearts}
+                onClick={badge.icon === "🌹" ? triggerRoses : triggerHearts}
               />
             ))}
           </div>
@@ -270,8 +375,8 @@ export default function App() {
             <button 
               className={`w-full py-2 rounded ${birthdayMode ? 'bg-blue-500 hover:bg-blue-600' : 'bg-pink-500 hover:bg-pink-600'} text-white font-medium transition-colors duration-700`}
               onClick={() => {
-                triggerHearts();
-                alert("You're going to be an amazing nurse! Happy Birthday! 💖");
+                triggerRoses();
+                alert("You're going to be an amazing nurse! Happy Birthday! 💖🌹");
               }}
             >
               Click for your birthday wish!
@@ -279,8 +384,14 @@ export default function App() {
           </div>
         </div>
         
-        {/* Memory collection */}
-        <div className={`w-full max-w-md bg-white rounded-lg shadow-xl p-6 border-2 ${birthdayMode ? 'border-pink-300' : 'border-blue-300'} transition-colors duration-700`}>
+        {/* Memory collection with rose frame */}
+        <div className={`w-full max-w-md bg-white rounded-lg shadow-xl p-6 border-2 ${birthdayMode ? 'border-pink-300' : 'border-blue-300'} transition-colors duration-700 relative`}>
+          {/* Rose corner decorations */}
+          <div className="absolute top-0 left-0 transform -translate-x-1/3 -translate-y-1/3 text-2xl">🌹</div>
+          <div className="absolute top-0 right-0 transform translate-x-1/3 -translate-y-1/3 text-2xl">🌹</div>
+          <div className="absolute bottom-0 left-0 transform -translate-x-1/3 translate-y-1/3 text-2xl">🌹</div>
+          <div className="absolute bottom-0 right-0 transform translate-x-1/3 translate-y-1/3 text-2xl">🌹</div>
+          
           <h3 className={`text-xl font-bold ${birthdayMode ? 'text-pink-700' : 'text-blue-700'} mb-4 text-center transition-colors duration-700`}>
             Photo Memories
           </h3>
@@ -290,7 +401,7 @@ export default function App() {
               <div 
                 key={idx} 
                 className="aspect-square bg-gray-100 rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer relative group"
-                onClick={triggerHearts}
+                onClick={idx % 3 === 0 ? triggerRoses : triggerHearts}
               >
                 <img 
                   src={`/images/photo${(idx % 6) + 1}.jpg`} 
@@ -300,19 +411,26 @@ export default function App() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 flex items-end justify-center p-1 transition-opacity">
                   <span className="text-white text-xs font-medium">Memory {idx + 1}</span>
                 </div>
+                {idx % 3 === 0 && (
+                  <div className="absolute bottom-1 right-1 text-lg opacity-70">🌹</div>
+                )}
               </div>
             ))}
           </div>
           
           <p className="text-center mt-4 text-gray-600 text-sm">
-            Click on any photo to send love! 💕
+            Click on any photo to send love or roses! 💕🌹
           </p>
         </div>
       </main>
       
       {/* Footer */}
       <footer className={`w-full ${birthdayMode ? 'bg-pink-500' : 'bg-blue-500'} text-white py-3 px-6 mt-8 text-center transition-colors duration-700`}>
-        <p>Created with <span className="animate-pulse cursor-pointer" onClick={triggerHearts}>❤️</span> for your special day!</p>
+        <div className="flex items-center justify-center gap-3">
+          <span className="animate-pulse cursor-pointer" onClick={triggerRoses}>🌹</span>
+          <p>Created with <span className="animate-pulse cursor-pointer" onClick={triggerHearts}>❤️</span> for your special day!</p>
+          <span className="animate-pulse cursor-pointer" onClick={triggerRoses}>🌹</span>
+        </div>
         <p className="text-sm mt-1 text-pink-100">Love count: {loveCount}</p>
       </footer>
     </div>
@@ -332,12 +450,12 @@ function NurseBadge({ icon, text, birthdayMode, onClick }) {
   );
 }
 
-// Floating decorative icons
+// Floating decorative icons with roses added
 function FloatingIcons() {
   return (
     <>
-      {[...Array(15)].map((_, i) => {
-        const icons = ["💉", "💊", "🩺", "🏥", "❤️", "🎂", "🎁"];
+      {[...Array(20)].map((_, i) => {
+        const icons = ["💉", "💊", "🩺", "🏥", "❤️", "🎂", "🎁", "🌹", "🌹", "🌹"];
         const randomIcon = icons[Math.floor(Math.random() * icons.length)];
         const size = Math.random() * 1 + 0.5;
         const left = `${Math.random() * 100}%`;
@@ -396,7 +514,41 @@ function HeartBurst() {
   );
 }
 
-// Confetti component
+// New Rose Burst Component
+function RoseBurst() {
+  return (
+    <div className="fixed inset-0 pointer-events-none z-50">
+      {[...Array(25)].map((_, i) => {
+        const size = Math.random() * 24 + 16;
+        const left = `${Math.random() * 100}%`;
+        const animationDuration = `${Math.random() * 2.5 + 1.5}s`;
+        const animationDelay = `${Math.random() * 0.3}s`;
+        const opacity = Math.random() * 0.5 + 0.5;
+        const rotation = Math.random() * 360;
+        
+        return (
+          <div 
+            key={i} 
+            className="absolute animate-roseBurst"
+            style={{
+              left,
+              top: "50%",
+              fontSize: `${size}px`,
+              animationDuration,
+              animationDelay,
+              opacity,
+              transform: `rotate(${rotation}deg)`,
+            }}
+          >
+            🌹
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// Confetti component with rose petals
 function Confetti() {
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
@@ -406,12 +558,12 @@ function Confetti() {
         const backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
         const animationDuration = `${Math.random() * 3 + 2}s`;
         const animationDelay = `${Math.random() * 0.5}s`;
-        const shape = Math.random() > 0.7 ? '❤️' : '';
+        const shape = Math.random() > 0.6 ? (Math.random() > 0.5 ? '❤️' : '🌹') : '';
         
         return shape ? (
           <div 
             key={i} 
-            className="absolute animate-confetti text-pink-500"
+            className="absolute animate-confetti"
             style={{
               left,
               top: "-5%",
@@ -431,7 +583,7 @@ function Confetti() {
               top: "-5%",
               width: `${size}px`,
               height: `${size}px`,
-              backgroundColor,
+              backgroundColor: Math.random() > 0.7 ? '#f43f5e' : backgroundColor, // Mix in some rose colors
               animationDuration,
               animationDelay,
               borderRadius: Math.random() > 0.5 ? '50%' : '0',
@@ -442,7 +594,3 @@ function Confetti() {
     </div>
   );
 }
-
-// Add this CSS to your tailwind.css file or add via style tag
-// You would need to add these custom animations to your tailwind.config.js
-// The following is a simulation of those animations
